@@ -334,21 +334,21 @@ def lookup(service, api_key, time=None):
             logging.warn(status)
             exit(0)
         scan = wireless().wireless_scan()
-        api_url = ("https://maps.googleapis.com/maps/api"
-                   "/browserlocation/json?browser=firefox")
+        api_url = ("https://www.googleapis.com/geolocation/"
+                   "v1/geolocate?")
+        api_url += ('&key=' + api_key)
 
         # We only send the closet five access points in our api request
         count = 0
         for i, val in enumerate(scan):
-            api_url += ('&wifi=mac:{0}&ssid:{1}&ss:{2}'.format(
+            api_url += ('&wifiAccessPoints=macAddress:{0}&signalStrength:{2}'.format(
                          val.get('BSSID'),
                          val.get('SSID_STR'),
                          val.get('RSSI')))
             count += 1
             if count == 5:
                 break
-        #api_url += ('&key=' + api_key)
-        #print(api_url)
+        print(api_url)
         data = download_file(api_url)
         if data is not False:
             obj = json.loads(data)
