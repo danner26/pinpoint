@@ -4,3 +4,6 @@ tmp/
 *.pkg
 *.dmg
 examples/pinpoint-script/pkgroot/*
+pkgroot/Library/Application Support/pinpoint/bin/FoundationPlist/__init__\.pyc
+
+pkgroot/Library/Application Support/pinpoint/bin/FoundationPlist/FoundationPlist\.pyc

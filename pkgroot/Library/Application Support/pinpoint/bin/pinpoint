@@ -347,7 +347,8 @@ def lookup(service, api_key, time=None):
             count += 1
             if count == 5:
                 break
-        api_url += ('&key={api_key}')
+        #api_url += ('&key=' + api_key)
+        #print(api_url)
         data = download_file(api_url)
         if data is not False:
             obj = json.loads(data)
@@ -753,9 +754,9 @@ def main():
         lookup_service = pref('LookupService').lower()
 
     if args.apikey:
-        api_key = args.apikey.lower()
+        api_key = args.apikey
     else:
-        api_key = pref('GoogleApiKey').lower()
+        api_key = pref('GoogleApiKey')
 
     if args.address:
         address_lookup_service = args.address.lower()
