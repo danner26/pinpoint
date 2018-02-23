@@ -16,6 +16,9 @@ import re
 import subprocess
 import sys
 import tempfile
+
+import requests
+
 from datetime import datetime, timedelta
 from distutils.version import LooseVersion
 from stat import S_IWOTH, S_IXOTH
@@ -335,21 +338,31 @@ def lookup(service, api_key, time=None):
             exit(0)
         scan = wireless().wireless_scan()
         api_url = ("https://www.googleapis.com/geolocation/"
-                   "v1/geolocate?")
-        api_url += ('&key=' + api_key)
-
+                   "v1/geolocate?key=" + api_key)
         # We only send the closet five access points in our api request
+
+        request_data = {
+            'considerIp': 'false',
+            'wifiAccessPoints': []
+        }
+
+
+
         count = 0
         for i, val in enumerate(scan):
-            api_url += ('&wifiAccessPoints=macAddress:{0}&signalStrength:{2}'.format(
-                         val.get('BSSID'),
-                         val.get('SSID_STR'),
-                         val.get('RSSI')))
+            #api_url += ('&wifi=mac:{0}&ssid:{1}&ss:{2}'.format(
+            #             val.get('BSSID'),
+            #             val.get('SSID_STR'),
+            #             val.get('RSSI')))
+            request_data['wifiAccessPoints'].append({'macAddress':val.get('BSSID'), 'signalStrength':val.get('RSSI'), 'signalToNoiseRatio':0})
             count += 1
             if count == 5:
                 break
-        print(api_url)
-        data = download_file(api_url)
+
+
+        header = {'Content-type': 'application/json'}
+        data = requests.post(api_url, data=json.dumps(request_data), headers=header)
+        print(request_data)
         if data is not False:
             obj = json.loads(data)
             lat = plist['Latitude'] = obj["location"]["lat"]
