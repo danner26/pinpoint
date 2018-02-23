@@ -16,9 +16,7 @@ import re
 import subprocess
 import sys
 import tempfile
-
 import requests
-
 from datetime import datetime, timedelta
 from distutils.version import LooseVersion
 from stat import S_IWOTH, S_IXOTH
@@ -350,8 +348,6 @@ def lookup(service, api_key, time=None):
             count += 1
             if count == 5:
                 break
-
-
         header = {'Content-type': 'application/json'}
         data = requests.post(api_url, data=json.dumps(request_data), headers=header)
         if ((data is not False) and (data.json()['error'] is None)) :
@@ -374,7 +370,7 @@ def lookup(service, api_key, time=None):
             status = "Google lookup request failed"
             plist = dict(CurrentStatus=str("Unsuccessful: " + status))
             logging.warn(status)
-
+            
 
 def download_file(url):
     """Download a simple file from the Internet."""
