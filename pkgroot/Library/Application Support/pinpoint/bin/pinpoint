@@ -343,13 +343,17 @@ def lookup(service, api_key, time=None):
         }
         count = 0
         for i, val in enumerate(scan):
-            request_data['wifiAccessPoints'].append({'macAddress':val.get('BSSID'), 'signalStrength':val.get('RSSI'), 'signalToNoiseRatio':0})
+            request_data['wifiAccessPoints'].append({
+                'macAddress':val.get('BSSID'),
+                'signalStrength':val.get('RSSI'),
+                'signalToNoiseRatio':0})
             count += 1
             if count == 5:
                 break
         dump = json.dumps(request_data).encode("utf8")
         try:
-            request = Request(api_url, dump, {'Content-type': 'application/json'})
+            request = Request(api_url, dump,
+                {'Content-type': 'application/json'})
             f = urlopen(request)
             data = f.read()
             f.close()
