@@ -823,7 +823,7 @@ def main():
     if args.fallback:
         toFallback = True
     else:
-        toFallback = False
+        toFallback = pref('Fallback')
 
     if args.auto:
         os_check()
