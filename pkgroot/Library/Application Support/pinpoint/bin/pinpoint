@@ -2,7 +2,7 @@
 # encoding: utf-8
 """
 pinpoint is a python based script that is able to find the location of your
-Mac using either Apple's or Google's GeoCoding APIs.
+Mac using either Apple's or Google's GeoLocation APIs.
 More information at https://github.com/clburlison/pinpoint
 """
 
@@ -305,7 +305,7 @@ def add_python():
         logging.info("Python is enabled")
 
 def lookup(service, api_key, toFallback, time=None):
-    """Have Apple's CoreLocation framework or Google's Geocoding API find
+    """Have Apple's CoreLocation framework or Google's GeoLocation API find
     the current location."""
     global plist
     if service == 'apple':
