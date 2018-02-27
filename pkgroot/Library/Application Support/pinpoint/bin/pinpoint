@@ -664,7 +664,7 @@ class ReverseLookup(object):
         else:
             self.data = "Unable to retrevie lookup for unknown reason."
 
-    def address_lookup(self, service):
+    def address_lookup(self, service, toFallback):
         """Resolve coordinates to a street address."""
         global plist
         api_url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='
@@ -683,6 +683,11 @@ class ReverseLookup(object):
                         except:
                             address = 'Google reverse lookup failed.'
                             logging.warn(address)
+                            if (toFallback):
+                                logging.info("Attempting to fall back to the Apple Reverse Lookup Service.")
+                                ReverseLookup().address_lookup('apple', False)
+                            else:
+                                logging.warn("Cannot perform Google Reverse Lookup and not falling back.")
                     elif service == 'apple':
                         # We are storing the lat/lon values as strings
                         # and must convert them to float before passing to
@@ -703,6 +708,15 @@ class ReverseLookup(object):
             except KeyError:
                 address = 'Unable to determine address'
                 logging.warn(address)
+                if (toFallback):
+                    if service == 'apple':
+                        logging.info("Attempting to fall back to the Google's Reverse Lookup Service.")
+                        ReverseLookup().address_lookup('google', False)
+                    else:
+                        logging.info("Attempting to fall back to the Apple's Reverse Lookup Service.")
+                        ReverseLookup().address_lookup('apple', False)
+                else:
+                    logging.warn("Cannot perform Reverse Lookup and not falling back.")
         else:
             address = 'Address lookup has been disabled on this computer.'
 
@@ -846,7 +860,7 @@ def main():
 
             # Process our lookup and reverse lookup
             lookup(lookup_service, api_key, toFallback)
-            ReverseLookup().address_lookup(address_lookup_service)
+            ReverseLookup().address_lookup(address_lookup_service, toFallback)
 
             # Set the fall back error status
             status = ("Error obtaining a location. LS was unresponsive "
